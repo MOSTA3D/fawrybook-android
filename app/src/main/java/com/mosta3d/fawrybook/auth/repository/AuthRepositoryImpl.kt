@@ -9,14 +9,17 @@ import io.ktor.util.reflect.typeInfo
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(private val fbApiClient: FBApiClient) : AuthRepository {
+
     override suspend fun login(loginRequest: LoginRequest): AppResponse<LoginResponse?> {
-        val value = fbApiClient.post<LoginRequest, LoginResponse?>(
+        val response = fbApiClient.post<LoginRequest, LoginResponse?>(
             body = loginRequest,
-            segments = arrayOf("login"),
+            segments = arrayOf("auth", "login"),
             options = Options(
                 responseType = typeInfo<AppResponse<LoginResponse>>()
             )
         )
         return value
+        return response
+    }
     }
 }

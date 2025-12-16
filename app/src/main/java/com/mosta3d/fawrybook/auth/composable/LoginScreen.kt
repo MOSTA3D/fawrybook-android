@@ -1,4 +1,4 @@
-package com.mosta3d.fawrybook.auth.composables
+package com.mosta3d.fawrybook.auth.composable
 
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
@@ -47,18 +48,21 @@ fun LoginScreen(
     navController: NavController = NavController(LocalContext.current)
 ) {
     val loginViewModel = hiltViewModel<LoginViewModel>(LocalContext.current as ComponentActivity)
-    val state by loginViewModel.state.collectAsStateWithLifecycle()
+    val state by loginViewModel.stateFlow.collectAsStateWithLifecycle()
 
     val localContext = LocalContext.current
 
     LaunchedEffect(Unit) {
         loginViewModel.loginEventFlow.collect {
             when (it) {
-                is LoginEvent.Success -> AppState.authenticate(
-                    userId = it.userId,
-                    email = it.email,
-                    token = it.token
-                )
+                is LoginEvent.Success -> {
+                    AppState.authenticate(
+                        userId = it.userId,
+                        email = it.email,
+                        token = it.token
+                    )
+                    navController.navigate("chat")
+                }
 
                 is LoginEvent.Error -> Toast.makeText(
                     localContext,
@@ -140,13 +144,25 @@ fun LoginScreen(
                 )
             }
 
-            Button(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.extraSmall,
-                onClick = {
-                    loginViewModel.login()
-                }) {
-                Text(text = "Login")
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(integerResource(R.integer.DEFAULT_PADDING).dp)
+            ) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.extraSmall,
+                    onClick = {
+                        loginViewModel.login()
+                    }) {
+                    Text(text = "Login")
+                }
+                Text(
+                    text = stringResource(R.string.don_not_have_account),
+                    modifier = Modifier.clickable {
+                        navController.navigate("signup")
+                    }
+                )
             }
         }
     }

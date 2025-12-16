@@ -1,8 +1,10 @@
 package com.mosta3d.fawrybook.shared.model
 
-abstract class BaseState<T>(
-    open val value: T,
-    open var touched: Boolean
-) {
-    abstract fun isValid(): Boolean
+open class BaseState {
+    val valid: Boolean
+        get() =
+            this::class.java.declaredFields.all {
+                val fieldVal = it.get(this)
+                fieldVal is BaseField<*> && fieldVal.isValid()
+            }
 }

@@ -3,9 +3,10 @@ package com.mosta3d.fawrybook.auth.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mosta3d.fawrybook.auth.event.LoginEvent
-import com.mosta3d.fawrybook.auth.model.LoginRequest
 import com.mosta3d.fawrybook.auth.repository.AuthRepository
 import com.mosta3d.fawrybook.auth.state.LoginState
+import com.mosta3d.fawrybook.auth.repository.SecretsStore
+import com.mosta3d.fawrybook.enums.Token
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,46 +16,64 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
-    private val _state = MutableStateFlow(LoginState())
-    val state = _state.asStateFlow()
+class LoginViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val secretStore: SecretsStore,
+) : ViewModel() {
+    private val _stateFlow = MutableStateFlow(LoginState())
+    val stateFlow = _stateFlow.asStateFlow()
 
     private val _loginEventFlow = MutableSharedFlow<LoginEvent>()
     val loginEventFlow = _loginEventFlow.asSharedFlow()
 
     fun onEmailChange(value: String) {
-        _state.value =
-            _state.value.copy(emailField = _state.value.emailField.copy(emailValue = value))
+        _stateFlow.value =
+            _stateFlow.value.copy(
+                emailField = _stateFlow.value.emailField.copy(
+                    value = value,
+                    touched = true
+                )
+            )
     }
 
     fun onPasswordChange(value: String) {
-        _state.value =
-            _state.value.copy(passwordField = _state.value.passwordField.copy(passwordValue = value))
+        _stateFlow.value =
+            _stateFlow.value.copy(
+                passwordField = _stateFlow.value.passwordField.copy(
+                    value = value,
+                    touched = true
+                )
+            )
     }
 
     fun togglePasswordVisibility() {
-        _state.value =
-            _state.value.copy(
-                isPasswordVisibleField = _state.value.isPasswordVisibleField.copy(
-                    isPasswordVisible = !_state.value.isPasswordVisibleField.value
+        _stateFlow.value =
+            _stateFlow.value.copy(
+                isPasswordVisibleField = _stateFlow.value.isPasswordVisibleField.copy(
+                    value = !_stateFlow.value.isPasswordVisibleField.value
                 )
             )
     }
 
     fun login() {
-        val loginRequest = _state.value.toLoginRequest()
+        val loginRequest = _stateFlow.value.toLoginRequest()
         viewModelScope.launch {
             val response = authRepository.login(loginRequest)
-            if (response.code != "0") {
+            if (!response.success) {
                 _loginEventFlow.emit(LoginEvent.Error(response.messages))
                 return@launch
             }
 
-            _loginEventFlow.emit(LoginEvent.Success(
-                token = response.data?.token ?: "",
-                email = response.data?.email ?: "",
-                userId = response.data?.userId ?: ""
-            ))
+            secretStore.setItem(Token.ACCESS_TOKEN.name, response.data?.token ?: "")
+            secretStore.setItem(Token.REFRESH_TOKEN.name, response.data?.refreshToken ?: "")
+
+            _loginEventFlow.emit(
+                LoginEvent.Success(
+                    token = response.data?.token ?: "",
+                    email = response.data?.email ?: "",
+                    userId = response.data?.userId ?: ""
+                )
+            )
         }
     }
 }

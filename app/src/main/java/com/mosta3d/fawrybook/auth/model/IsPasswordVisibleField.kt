@@ -1,11 +1,11 @@
 package com.mosta3d.fawrybook.auth.model
 
-import com.mosta3d.fawrybook.shared.model.BaseState
+import com.mosta3d.fawrybook.shared.model.BaseField
 
 data class IsPasswordVisibleField(
-    private val isPasswordVisible: Boolean,
+    override val value: Boolean,
     override var touched: Boolean
-) : BaseState<Boolean>(isPasswordVisible, touched) {
+) : BaseField<Boolean>(value, touched) {
     override fun isValid(): Boolean {
         return true
     }

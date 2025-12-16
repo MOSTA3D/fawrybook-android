@@ -1,6 +1,8 @@
 package com.mosta3d.fawrybook.shared.di
 
 import com.mosta3d.fawrybook.BuildConfig
+import com.mosta3d.fawrybook.auth.repository.SecretsStore
+import com.mosta3d.fawrybook.enums.Token
 import com.mosta3d.fawrybook.shared.client.ApiDispatcher
 import com.mosta3d.fawrybook.shared.client.FBApiClient
 import com.mosta3d.fawrybook.shared.client.KtorApiDispatcher
@@ -11,7 +13,9 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -20,7 +24,7 @@ import kotlinx.serialization.json.Json
 class SharedModule {
     @Provides
     @Singleton
-    fun httpClient(): HttpClient {
+    fun httpClient(secretsStore: SecretsStore): HttpClient {
         return HttpClient(CIO) {
             install(ContentNegotiation) {
                 json(Json {
@@ -28,6 +32,12 @@ class SharedModule {
                     isLenient = true     // Optional: Allows lenient parsing of non-strict JSON formats
                     ignoreUnknownKeys = true  // Optional: Ignores unknown keys in JSON
                 })
+            }
+
+            install(DefaultRequest) {
+                headers {
+                    append("Authorization", "Bearer ${secretsStore.getItem(Token.ACCESS_TOKEN.name)}")
+                }
             }
         }
     }
