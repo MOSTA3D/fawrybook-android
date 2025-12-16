@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "com.mosta3d.fawrybook"
-        minSdk = 35
+        minSdk = 29
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -91,6 +91,8 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
 
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.security.crypto.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
