@@ -17,12 +17,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mosta3d.fawrybook.auth.composables.LoginScreen
-import com.mosta3d.fawrybook.auth.composables.SignupScreen
-import com.mosta3d.fawrybook.home.HomeScreen
-import com.mosta3d.fawrybook.post.PostsScreen
-import com.mosta3d.fawrybook.post.SelectedPostScreen
 import com.mosta3d.fawrybook.auth.composable.LoginScreen
+import com.mosta3d.fawrybook.auth.composable.SignupScreen
+import com.mosta3d.fawrybook.chat.composables.ChatScreen
+import com.mosta3d.fawrybook.partner.composable.AddPartnerScreen
 import com.mosta3d.fawrybook.profile.ProfileScreen
 import com.mosta3d.fawrybook.shared.state.AppState
 import com.mosta3d.fawrybook.ui.theme.FawrybookTheme

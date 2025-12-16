@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">fawrybook</string>
+    <string name="app_name">You</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="username_required">Username is required</string>
+    <string name="email_required">Email is required</string>
+    <string name="password_required">Password is required</string>
+    <string name="password_invalid">Password is invalid</string>
+    <string name="confirm_password_required">Confirm password is required</string>
+    <string name="passwords_not_match">Passwords do not match</string>
+    <string name="email_invalid">Email is invalid</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="continue_">Continue</string>
+    <string name="don_not_have_account">Don\'t have an account ?</string>
 </resources>
