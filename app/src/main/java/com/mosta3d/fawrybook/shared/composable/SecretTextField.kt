@@ -45,7 +45,7 @@ fun AppSecretField(
                     if (!it.isFocused) return@onFocusChanged
                     onChange(
                         fieldData.copy(
-                            touched = true
+                            isTouched = true
                         )
                     )
                 },
@@ -58,9 +58,9 @@ fun AppSecretField(
                     )
                 )
             },
-            isError = fieldData.touched && !fieldData.isValid,
+            isError = fieldData.isTouched && !fieldData.isValid,
             supportingText = {
-                if (fieldData.touched && !fieldData.isValid && fieldData.errorMessages.isNotEmpty())
+                if (fieldData.isTouched && !fieldData.isValid && fieldData.errorMessages.isNotEmpty())
                     Text(
                         color = MaterialTheme.colorScheme.error,
                         text = stringResource(fieldData.errorMessages[0])

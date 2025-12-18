@@ -49,6 +49,12 @@ class SignUpViewModel @Inject constructor(private val authRepository: AuthReposi
 
     fun submit() {
         viewModelScope.launch {
+            if (!state.value.isValid) {
+                _signUpEventFlow.emit(SignUpEvent.Error(messages = listOf("Fill the form kwayyis")))
+                _state.value = _state.value.asTouched()
+                return@launch
+            }
+
             val response = authRepository.signUp(_state.value.toRequestPayload())
             if (!response.success) {
                 _signUpEventFlow.emit(SignUpEvent.Error(response.messages))
@@ -59,7 +65,7 @@ class SignUpViewModel @Inject constructor(private val authRepository: AuthReposi
                 SignUpEvent.Success(
                     token = response.data?.token ?: "",
                     email = response.data?.email ?: "",
-                    userId = response.data?.userId ?: ""
+                    userId = response.data?.username ?: ""
                 )
             )
         }

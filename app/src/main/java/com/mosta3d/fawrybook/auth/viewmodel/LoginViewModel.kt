@@ -7,6 +7,7 @@ import com.mosta3d.fawrybook.auth.repository.AuthRepository
 import com.mosta3d.fawrybook.auth.state.LoginState
 import com.mosta3d.fawrybook.auth.repository.SecretsStore
 import com.mosta3d.fawrybook.enums.Token
+import com.mosta3d.fawrybook.shared.form.AppFieldData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,36 +27,16 @@ class LoginViewModel @Inject constructor(
     private val _loginEventFlow = MutableSharedFlow<LoginEvent>()
     val loginEventFlow = _loginEventFlow.asSharedFlow()
 
-    fun onEmailChange(value: String) {
-        _stateFlow.value =
-            _stateFlow.value.copy(
-                emailField = _stateFlow.value.emailField.copy(
-                    value = value,
-                    touched = true
-                )
-            )
+    // refactor : move this to be inside appfield
+    fun onEmailChange(value: AppFieldData<String>) {
+        _stateFlow.value = _stateFlow.value.copy(emailField = value)
     }
 
-    fun onPasswordChange(value: String) {
-        _stateFlow.value =
-            _stateFlow.value.copy(
-                passwordField = _stateFlow.value.passwordField.copy(
-                    value = value,
-                    touched = true
-                )
-            )
+    fun onPasswordChange(value: AppFieldData<String>) {
+        _stateFlow.value = _stateFlow.value.copy(passwordField = value)
     }
 
-    fun togglePasswordVisibility() {
-        _stateFlow.value =
-            _stateFlow.value.copy(
-                isPasswordVisibleField = _stateFlow.value.isPasswordVisibleField.copy(
-                    value = !_stateFlow.value.isPasswordVisibleField.value
-                )
-            )
-    }
-
-    fun login() {
+    fun submit() {
         val loginRequest = _stateFlow.value.toLoginRequest()
         viewModelScope.launch {
             val response = authRepository.login(loginRequest)
@@ -71,7 +52,7 @@ class LoginViewModel @Inject constructor(
                 LoginEvent.Success(
                     token = response.data?.token ?: "",
                     email = response.data?.email ?: "",
-                    userId = response.data?.userId ?: ""
+                    userId = response.data?.username ?: ""
                 )
             )
         }

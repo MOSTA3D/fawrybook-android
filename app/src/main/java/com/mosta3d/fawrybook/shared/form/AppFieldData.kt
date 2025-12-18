@@ -4,7 +4,7 @@ import com.mosta3d.fawrybook.shared.form.validator.AppValidator
 
 data class AppFieldData<T>(
     val value: T,
-    val touched: Boolean = false,
+    val isTouched: Boolean = false,
     private val validators: List<AppValidator<T>>
 ) {
     val isValid: Boolean
@@ -14,4 +14,10 @@ data class AppFieldData<T>(
         get() = validators.mapNotNull {
             it.validateAndGetMessageId(value)
         }
+
+    fun touch(): AppFieldData<T> {
+        return this.copy(
+            isTouched = true
+        )
+    }
 }

@@ -1,13 +1,9 @@
 package com.mosta3d.fawrybook.auth.state
 
-import com.mosta3d.fawrybook.auth.model.EmailField
-import com.mosta3d.fawrybook.auth.model.IsPasswordVisibleField
-import com.mosta3d.fawrybook.auth.model.PasswordField
 import com.mosta3d.fawrybook.auth.model.SignUpRequest
-import com.mosta3d.fawrybook.auth.model.UsernameField
 import com.mosta3d.fawrybook.shared.form.AppFieldData
-import com.mosta3d.fawrybook.shared.model.BaseField
 
+// todo : use map instead of statically set fields
 data class SignUpState(
     val usernameFieldData: AppFieldData<String>,
     val emailFieldData: AppFieldData<String>,
@@ -26,6 +22,21 @@ data class SignUpState(
         get() =
             this::class.java.declaredFields.all {
                 val fieldVal = it.get(this)
-                fieldVal is AppFieldData<*> && fieldVal.isValid
+                return fieldVal !is AppFieldData<*> || fieldVal.isValid
             }
+
+    fun asTouched(): SignUpState {
+        // todo : find a more dynamic approach
+        return this.copy(
+            usernameFieldData = usernameFieldData.touch(),
+            emailFieldData = emailFieldData.touch(),
+            passwordFieldData = passwordFieldData.touch(),
+            confirmPasswordFieldData = confirmPasswordFieldData.touch()
+        )
+    }
+
+    val isTouched: Boolean
+        get() = this::class.java.declaredFields.any {
+            (it.get(this) as AppFieldData<*>).isTouched
+        }
 }
