@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mosta3d.fawrybook.auth.composable.LoginScreen
 import com.mosta3d.fawrybook.auth.composable.SignupScreen
 import com.mosta3d.fawrybook.chat.composables.ChatScreen
+import com.mosta3d.fawrybook.memories.composable.MemoriesScreen
 import com.mosta3d.fawrybook.partner.composable.AddPartnerScreen
 import com.mosta3d.fawrybook.partner.composable.Partner
 import com.mosta3d.fawrybook.profile.ProfileScreen
@@ -67,7 +68,7 @@ fun AppContainer() {
     var startingRoute = "login"
 
     LaunchedEffect(Unit) {
-        startingRoute = if (authData.isLoggedIn) "chat" else "login"
+        startingRoute = if (authData.isLoggedIn) "partner" else "login"
     }
 
     LaunchedEffect(authData) {
@@ -104,8 +105,8 @@ fun AppContainer() {
         composable(route = "posts") {
             PostsScreen(navController = navController)
         }
-        composable(route = "selectedPost") {
-            SelectedPostScreen(navController = navController)
+        composable(route = "memories") {
+            MemoriesScreen(navController = navController)
         }
     }
 }
