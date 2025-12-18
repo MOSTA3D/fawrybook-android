@@ -84,8 +84,8 @@ fun AppContainer() {
         composable(route = "signup") {
             SignupScreen(navController = navController)
         }
-        composable(route = "home") {
-            HomeScreen(navController = navController)
+        composable(route = "add-partner") {
+            AddPartnerScreen(navController = navController)
         }
         composable(route = "profile") {
             ProfileScreen(navController = navController)
