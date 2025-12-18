@@ -7,6 +7,7 @@ import com.mosta3d.fawrybook.auth.model.SignUpResponse
 import com.mosta3d.fawrybook.shared.client.AppResponse
 import com.mosta3d.fawrybook.shared.client.FBApiClient
 import com.mosta3d.fawrybook.shared.client.Options
+import com.mosta3d.fawrybook.shared.state.AppState
 import io.ktor.util.reflect.typeInfo
 import javax.inject.Inject
 

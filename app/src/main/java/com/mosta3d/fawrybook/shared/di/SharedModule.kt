@@ -6,18 +6,19 @@ import com.mosta3d.fawrybook.enums.Token
 import com.mosta3d.fawrybook.shared.client.ApiDispatcher
 import com.mosta3d.fawrybook.shared.client.FBApiClient
 import com.mosta3d.fawrybook.shared.client.KtorApiDispatcher
+import com.mosta3d.fawrybook.shared.network.NetworkEventBus
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import javax.inject.Singleton
+import io.ktor.client.request.headers
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -53,7 +54,7 @@ class SharedModule {
 
     @Provides
     @Singleton
-    fun fbApiClient(apiDispatcher: ApiDispatcher): FBApiClient {
-        return FBApiClient(apiDispatcher)
+    fun fbApiClient(apiDispatcher: ApiDispatcher, networkEventBus: NetworkEventBus): FBApiClient {
+        return FBApiClient(apiDispatcher, networkEventBus)
     }
 }

@@ -16,4 +16,13 @@ object AppState {
             token = token
         )
     }
+
+    fun clearAuthData() {
+        _auth.value = AuthData(
+            isLoggedIn = false,
+            email = "",
+            userId = "",
+            token = ""
+        )
+    }
 }

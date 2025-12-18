@@ -71,6 +71,13 @@ fun AppContainer() {
 
     LaunchedEffect(authData) {
         Log.i("sha3bolla", "authData.isLoggedIn: ${authData.isLoggedIn}")
+        if (!authData.isLoggedIn) {
+            navController.navigate("login") {
+                popUpTo("login") {
+                    inclusive = true
+                }
+            }
+        }
     }
 
     NavHost(
