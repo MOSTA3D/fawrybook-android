@@ -21,6 +21,7 @@ import com.mosta3d.fawrybook.auth.composable.LoginScreen
 import com.mosta3d.fawrybook.auth.composable.SignupScreen
 import com.mosta3d.fawrybook.chat.composables.ChatScreen
 import com.mosta3d.fawrybook.partner.composable.AddPartnerScreen
+import com.mosta3d.fawrybook.partner.composable.Partner
 import com.mosta3d.fawrybook.profile.ProfileScreen
 import com.mosta3d.fawrybook.shared.state.AppState
 import com.mosta3d.fawrybook.ui.theme.FawrybookTheme
@@ -93,6 +94,9 @@ fun AppContainer() {
         }
         composable(route = "add-partner") {
             AddPartnerScreen(navController = navController)
+        }
+        composable(route = "partner") {
+            Partner(navController = navController)
         }
         composable(route = "profile") {
             ProfileScreen(navController = navController)
